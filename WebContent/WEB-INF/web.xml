@@ -14,7 +14,7 @@
     <param-value>30</param-value>
   </context-param>
   <context-param>
-    <param-name>hostname</param-name>
+    <param-name>websiteName</param-name>
     <param-value>studentwork</param-value>
   </context-param>
   <error-page>

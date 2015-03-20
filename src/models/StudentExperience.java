@@ -40,20 +40,28 @@ public class StudentExperience {
 	}
 	
 	public static ArrayList<StudentExperience> getStudentExps(String columnName,String value){
+		ArrayList<StudentExperience> experienceList = new ArrayList<StudentExperience>();
+		String sql = "SELECT * FROM sw_student_exp WHERE "+ columnName +"=?;";
+		String sqlToGetAll = "SELECT * FROM sw_student_exp;";
 		//if columnName is not a column name, finish and return null
 		if(!STUDENT_EXP_COLUMN.contains(columnName)){
-			//Ghi log
-			System.out.println("Table has no the column called "+columnName);
-			return null;
+			if (columnName == "" && value == "") {
+				sql = sqlToGetAll;
+			}else{
+				//Ghi log
+				System.out.println("Table has no the column called "+columnName);
+				return experienceList;
+			}
 		}
-		String sql = "SELECT * FROM sw_student_exp WHERE "+ columnName +"=?;";
+		
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
-		ArrayList<StudentExperience> experienceList = new ArrayList<StudentExperience>();
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setString(1, value);
+			if (sql!=sqlToGetAll) {
+				prepstmt.setString(1, value);
+			}
 			ResultSet result = prepstmt.executeQuery();
 			while (result.next()) {
 				int id = result.getInt("id");
@@ -84,21 +92,20 @@ public class StudentExperience {
 	}
 	
 	public int addToDB(){
-		String sql = "INSERT INTO sw_student_exp(id,studentId,company,title,startTime,finishTime,more) "
-				+ "VALUES(?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO sw_student_exp(studentId,company,title,startTime,finishTime,more) "
+				+ "VALUES(?,?,?,?,?,?)";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
 		int result = 0;
 		try{
 			connection = MyConnection.getConnection();
-			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setInt(1, this.id);
-			prepstmt.setInt(2, this.studentId);
-			prepstmt.setString(3, this.company);
-			prepstmt.setString(4, this.title);
-			prepstmt.setString(5, this.startTime);
-			prepstmt.setString(6, this.finishTime);
-			prepstmt.setString(7, this.more);
+			prepstmt = connection.prepareStatement(sql);;
+			prepstmt.setInt(1, this.studentId);
+			prepstmt.setString(2, this.company);
+			prepstmt.setString(3, this.title);
+			prepstmt.setString(4, this.startTime);
+			prepstmt.setString(5, this.finishTime);
+			prepstmt.setString(6, this.more);
 			
 			result = prepstmt.executeUpdate();
 			System.out.print("Inserted into sw_student_exp successfully!");

@@ -12,7 +12,7 @@ public class Company {
 	protected String username;
 	protected String email;
 	protected String password;
-	protected String companyName;
+	protected String fullname; // company name
 	protected String phone;
 	protected String address;
 	protected String avatar;

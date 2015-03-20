@@ -29,20 +29,27 @@ public class StudentLanguage {
 		this.level = level;
 	}
 	public static ArrayList<StudentLanguage> getStudentExps(String columnName,String value){
+		ArrayList<StudentLanguage> languageList = new ArrayList<StudentLanguage>();
+		String sql = "SELECT * FROM sw_student_languages WHERE "+ columnName +"=?;";
+		String sqlToGetAll = "SELECT * FROM sw_student_languages;";
 		//if columnName is not a column name, finish and return null
 		if(!STUDENT_LANGUAGE_COLUMN.contains(columnName)){
-			//Ghi log
-			System.out.println("Table has no the column called "+columnName);
-			return null;
+			if (columnName == "" && value == "") {
+				sql = sqlToGetAll;
+			}else{
+				//Ghi log
+				System.out.println("Table has no the column called "+columnName);
+				return languageList;
+			}
 		}
-		String sql = "SELECT * FROM sw_student_languages WHERE "+ columnName +"=?;";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
-		ArrayList<StudentLanguage> languageList = new ArrayList<StudentLanguage>();
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setString(1, value);
+			if (sql!=sqlToGetAll) {
+				prepstmt.setString(1, value);
+			}
 			ResultSet result = prepstmt.executeQuery();
 			while (result.next()) {
 				int id = result.getInt("id");
@@ -69,18 +76,17 @@ public class StudentLanguage {
         return languageList;
 	}
 	public int addToDB(){
-		String sql = "INSERT INTO sw_student_languages(id,studentId,language,level) "
-				+ "VALUES(?,?,?,?)";
+		String sql = "INSERT INTO sw_student_languages(studentId,language,level) "
+				+ "VALUES(?,?,?)";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
 		int result = 0;
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setInt(1, this.id);
-			prepstmt.setInt(2, this.studentId);
-			prepstmt.setString(3, this.language);
-			prepstmt.setString(4, this.level);
+			prepstmt.setInt(1, this.studentId);
+			prepstmt.setString(2, this.language);
+			prepstmt.setString(3, this.level);
 			result = prepstmt.executeUpdate();
 			System.out.print("Inserted into sw_student_languages successfully!");
 		}catch (Exception e) {

@@ -22,6 +22,11 @@ import models.User;
 public class AboutServlet extends HttpServlet {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
@@ -32,24 +37,7 @@ public class AboutServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        String email = request.getParameter("email");
-        if(email==null || email==""){
-        	User user1 = (User) request.getSession().getAttribute("user");
-        	if(user1!=null){
-        		email = ((User)request.getSession().getAttribute("user")).getEmail();
-        	}else{
-        		response.sendRedirect("index.jsp");
-        		return;
-        	}
-        }
-        //PrintWriter out = response.getWriter();
-        //out.print(email);
-        User user = User.getUserByEmail(email);
-    	request.setAttribute("user", user);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/about.jsp");
         
-        dispatcher.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -61,11 +49,6 @@ public class AboutServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -78,17 +61,35 @@ public class AboutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+    	response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+        String username = request.getParameter("username");
+        if(username==null || username==""){
+        	User user = (User) request.getSession().getAttribute("user");
+        	if(user!=null){
+        		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/about.jsp");
+        		request.setAttribute("user", user);
+                dispatcher.forward(request, response);
+        	}else{
+        		response.sendRedirect("home");
+        		return;
+        	}
+        }else{
+        	if(User.getUsers("username", username).size()!=0){
+            	User user = User.getUsers("username",username).get(0);
+            	request.setAttribute("user", user);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/about.jsp");
+                dispatcher.forward(request, response);
+            }else{
+        		response.sendRedirect("home");
+        		return;
+        	}
+        }	
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    	doPost(request, response);
+    }
 }

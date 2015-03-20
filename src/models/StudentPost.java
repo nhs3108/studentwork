@@ -28,27 +28,34 @@ public class StudentPost {
 		this.time = time;
 	}
 	public static ArrayList<StudentPost> getStudentExps(String columnName,String value){
+		String sql = "SELECT * FROM sw_student_posts WHERE "+ columnName +"=?;";
+		String sqlToGetAll = "SELECT * FROM sw_student_posts;";
+		ArrayList<StudentPost> posttList = new ArrayList<StudentPost>();
 		//if columnName is not a column name, finish and return null
 		if(!STUDENT_POST_COLUMN.contains(columnName)){
-			//Ghi log
-			System.out.println("Table has no the column called "+columnName);
-			return null;
+			if (columnName == "" && value == "") {
+				sql = sqlToGetAll;
+			}else{
+				//Ghi log
+				System.out.println("Table has no the column called "+columnName);
+				return posttList;
+			}
 		}
-		String sql = "SELECT * FROM sw_student_posts WHERE "+ columnName +"=?;";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
-		ArrayList<StudentPost> interestList = new ArrayList<StudentPost>();
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setString(1, value);
+			if (sql!=sqlToGetAll) {
+				prepstmt.setString(1, value);
+			}
 			ResultSet result = prepstmt.executeQuery();
 			while (result.next()) {
 				int id = result.getInt("id");
 				int studentId = result.getInt("studentId");
 				String content = result.getString("content");
 				String time = result.getString("time");
-				interestList.add(new StudentPost(id, studentId, content, time));
+				posttList.add(new StudentPost(id, studentId, content, time));
 			}
 		}catch (Exception e) {
             e.printStackTrace();
@@ -65,21 +72,20 @@ public class StudentPost {
                 System.out.println(e.toString());
             }
         }
-        return interestList;
+        return posttList;
 	}
 	public int addToDB(){
-		String sql = "INSERT INTO sw_student_interests(id, studentId, content, time) "
-				+ "VALUES(?,?,?,?)";
+		String sql = "INSERT INTO sw_student_interests(studentId, content, time) "
+				+ "VALUES(?,?,?)";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
 		int result = 0;
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setInt(1, this.id);
-			prepstmt.setInt(2, this.studentId);
-			prepstmt.setString(3, this.content);
-			prepstmt.setString(4, this.time);
+			prepstmt.setInt(1, this.studentId);
+			prepstmt.setString(2, this.content);
+			prepstmt.setString(3, this.time);
 			result = prepstmt.executeUpdate();
 			System.out.print("Inserted into sw_student_posts successfully!");
 		}catch (Exception e) {

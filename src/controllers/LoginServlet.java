@@ -3,6 +3,7 @@ package controllers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,27 +30,32 @@ public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
+    	response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
         String username = request.getParameter("username");
         String password = MD5.encrypt(request.getParameter("password"));
+        System.out.print(username + " " +password);
         // **************** Sua lai sau *****************
-        String lastLogin = null;
-        String lastActivity = null;
+        int lastLogin = 0;
+        int lastActivity = 0;
         System.out.println(username);
         System.out.println(password);
         //********************
-        Object user = null;
-        if((Student.getStudents("username", username)).size()!=0){
-        	user = Student.getStudents("username",username).get(0);
-        	HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            response.sendRedirect("home");
-        }else if(Company.getCompanies("username", username).size() != 0){
-        	user = Company.getCompanies("username",username).get(0);
-        	HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            response.sendRedirect("home");
+        ArrayList<User> userList = User.getUsers("username", username);
+        User user = null;
+        if(userList.size()!=0 && (user = userList.get(0)).getPassword().equals(password)){
+        	if(user.getPassword()==null || user.getActivation()==""){ // Kiem tra tai khoan da duoc kich hoat hay chua
+        		HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                response.sendRedirect("home");
+        	}
+        	else{
+        		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+                request.setAttribute("message", "Tài khoản bạn vừa đăng nhập hiện chưa được kích hoạt");
+                request.setAttribute("msgClass", "alert-danger");
+                dispatcher.forward(request, response);
+        	}
         }else {
             RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
             request.setAttribute("message", "Tài khoản bạn vừa đăng nhập không tồn tại");

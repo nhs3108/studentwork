@@ -27,7 +27,7 @@
 
 <body>
 	<div class="header">
-		<jsp:include page="/WEB-INF/includes/navigatorBar.jsp"></jsp:include>
+		<jsp:include page="/WEB-INF/includes/navigatorBar1.jsp"></jsp:include>
 
 		<!-- *************START ROW**************** -->
 		<div class="row">

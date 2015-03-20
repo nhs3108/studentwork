@@ -47,20 +47,27 @@ public class StudentVolunteer {
 	}
 
 	public static ArrayList<StudentVolunteer> getStudentExps(String columnName,String value){
+		ArrayList<StudentVolunteer> volunteerList = new ArrayList<StudentVolunteer>();
+		String sql = "SELECT * FROM sw_student_volunteers WHERE "+ columnName +"=?;";
+		String sqlToGetAll = "SELECT * FROM sw_student_volunteers;";
 		//if columnName is not a column name, finish and return null
 		if(!STUDENT_VOLUNTEER_COLUMN.contains(columnName)){
-			//Ghi log
-			System.out.println("Table has no the column called "+columnName);
-			return null;
+			if (columnName == "" && value == "") {
+				sql = sqlToGetAll;
+			}else{
+				//Ghi log
+				System.out.println("Table has no the column called "+columnName);
+				return volunteerList;
+			}
 		}
-		String sql = "SELECT * FROM sw_student_volunteers WHERE "+ columnName +"=?;";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
-		ArrayList<StudentVolunteer> volunteerList = new ArrayList<StudentVolunteer>();
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setString(1, value);
+			if (sql!=sqlToGetAll) {
+				prepstmt.setString(1, value);
+			}
 			ResultSet result = prepstmt.executeQuery();
 			while (result.next()) {
 				int id = result.getInt("id");
@@ -93,23 +100,22 @@ public class StudentVolunteer {
         return volunteerList;
 	}
 	public int addToDB(){
-		String sql = "INSERT INTO sw_student_volunteers(id, studentId, organization, role, cause, startTime, finishTime, isNow, more) "
-				+ "VALUES(?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO sw_student_volunteers(studentId, organization, role, cause, startTime, finishTime, isNow, more) "
+				+ "VALUES(?,?,?,?,?,?,?,?)";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
 		int result = 0;
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setInt(1, this.id);
-			prepstmt.setInt(2, this.studentId);
-			prepstmt.setString(3, this.organization);
-			prepstmt.setString(4, this.role);
-			prepstmt.setString(5, this.cause);
-			prepstmt.setString(6, this.startTime);
-			prepstmt.setString(7, this.finishTime);
-			prepstmt.setInt(8, this.isNow);
-			prepstmt.setString(9, this.more);
+			prepstmt.setInt(1, this.studentId);
+			prepstmt.setString(2, this.organization);
+			prepstmt.setString(3, this.role);
+			prepstmt.setString(4, this.cause);
+			prepstmt.setString(5, this.startTime);
+			prepstmt.setString(6, this.finishTime);
+			prepstmt.setInt(7, this.isNow);
+			prepstmt.setString(8, this.more);
 			result = prepstmt.executeUpdate();
 			System.out.print("Inserted into sw_student_volunteers successfully!");
 		}catch (Exception e) {

@@ -3,57 +3,57 @@ package models;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 
-public class Student {
+public class User {
 	protected int id;
 	protected String type;
 	protected String username;
 	protected String email;
 	protected String password;
 	protected String fullname;
-	protected String gender;
-	protected String birthday;
 	protected String phone;
 	protected String address;
 	protected String avatar;
-	protected String college; // university or company
-	protected String role; // role in the college
-	protected String more;
 	protected int lastLogin;
 	protected int lastActivity;
 	protected String activation;
-	public static final ArrayList<String> STUDENT_COLUMN = new ArrayList<>();
+	public static final ArrayList<String> USER_COLUMN = new ArrayList<>();
 	static{
-		STUDENT_COLUMN.add("id");
-		STUDENT_COLUMN.add("type");
-		STUDENT_COLUMN.add("username");
-		STUDENT_COLUMN.add("email");
-		STUDENT_COLUMN.add("password");
-		STUDENT_COLUMN.add("fullname");
-		STUDENT_COLUMN.add("gender");
-		STUDENT_COLUMN.add("birthday");
-		STUDENT_COLUMN.add("phone");
-		STUDENT_COLUMN.add("address");
-		STUDENT_COLUMN.add("avatar");
-		STUDENT_COLUMN.add("college");
-		STUDENT_COLUMN.add("role");
-		STUDENT_COLUMN.add("more");
-		STUDENT_COLUMN.add("lastLogin");
-		STUDENT_COLUMN.add("lastActivity");
-		STUDENT_COLUMN.add("activation");
-		
+		USER_COLUMN.add("id");
+		USER_COLUMN.add("type");
+		USER_COLUMN.add("username");
+		USER_COLUMN.add("email");
+		USER_COLUMN.add("password");
+		USER_COLUMN.add("fullname");
+		USER_COLUMN.add("phone");
+		USER_COLUMN.add("address");
+		USER_COLUMN.add("avatar");
+		USER_COLUMN.add("lastLogin");
+		USER_COLUMN.add("lastActivity");
+		USER_COLUMN.add("activation");
 	}
-	public Student() {
-		// TODO Auto-generated constructor stub
+	public static final ArrayList<String> TABLES_OF_USER = new ArrayList<>();
+	static{
+		TABLES_OF_USER.add("sw_users");
+		TABLES_OF_USER.add("sw_student_awards");
+		TABLES_OF_USER.add("sw_student_basic");
+		TABLES_OF_USER.add("sw_student_certifications");
+		TABLES_OF_USER.add("sw_student_exp");
+		TABLES_OF_USER.add("sw_student_interests");
+		TABLES_OF_USER.add("sw_student_languages");
+		TABLES_OF_USER.add("sw_student_posts");
+		TABLES_OF_USER.add("sw_student_projects");
+		TABLES_OF_USER.add("sw_student_skills");
+		TABLES_OF_USER.add("sw_student_volunteers");
+	}
+	public User() {
+		super();
 	}
 	
-	public Student(int id, String type, String username, String email,
-			String password, String fullname, String gender, String birthday,
-			String phone, String address, String avatar, String college,
-			String role, String more, int lastLogin, int lastActivity,
-			String activation) {
+	public User(int id, String type, String username, String email,
+			String password, String fullname, String phone, String address,
+			String avatar, int lastLogin, int lastActivity, String activation) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -61,14 +61,9 @@ public class Student {
 		this.email = email;
 		this.password = password;
 		this.fullname = fullname;
-		this.gender = gender;
-		this.birthday = birthday;
 		this.phone = phone;
 		this.address = address;
 		this.avatar = avatar;
-		this.college = college;
-		this.role = role;
-		this.more = more;
 		this.lastLogin = lastLogin;
 		this.lastActivity = lastActivity;
 		this.activation = activation;
@@ -82,19 +77,19 @@ public class Student {
 	 * @author HongSon
 	 * @see 
 	 */
-	public static ArrayList<Student> getStudents(String columnName,String value){
-		String sql = "SELECT * FROM sw_students WHERE "+ columnName +"=?;";
-		String sqlToGetAll = "SELECT * FROM sw_students;";
+	public static ArrayList<User> getUsers(String columnName,String value){
+		String sql = "SELECT * FROM sw_users WHERE "+ columnName +"=?;";
+		String sqlToGetAll = "SELECT * FROM sw_users;";
 		
 		//if columnName is not a column name, finish and return null
-		ArrayList<Student> studentList = new ArrayList<Student>();
-		if(!STUDENT_COLUMN.contains(columnName)){
+		ArrayList<User> userList = new ArrayList<User>();
+		if(!USER_COLUMN.contains(columnName)){
 			if (columnName == "" && value == "") {
 				sql = sqlToGetAll;
 			}else{
 				//Ghi log
 				System.out.println("Table has no the column called "+columnName);
-				return studentList;
+				return userList;
 			}
 		}
 		Connection connection = null;
@@ -113,19 +108,13 @@ public class Student {
 				String email = result.getString("email");
 				String password = result.getString("password");
 				String fullname = result.getString("fullname");
-				String gender = result.getString("gender");
-				String birthday = result.getString("birthday");
 				String phone = result.getString("phone");
 				String address = result.getString("address");
-				String avatar = result.getString("avatar");
-				String college = result.getString("college");
-				String role = result.getString("role");
-				String more = result.getString("more");
+				String avatar = result.getString("avatar");;
 				int lastLogin = Integer.parseInt(result.getString("lastLogin")); 
 				int lastActivity = Integer.parseInt(result.getString("lastActivity")); 
 				String activation = result.getString("activation");
-				studentList.add(new Student(id, type, username, email, password, fullname, gender, birthday, phone, 
-						address, avatar, college, role, more, lastLogin, lastActivity, activation));
+				userList.add(new User(id, type, username, email, password, fullname, phone, address, avatar, lastLogin, lastActivity, activation));
 			}
 		}catch (Exception e) {
             e.printStackTrace();
@@ -142,13 +131,13 @@ public class Student {
                 System.out.println(e.toString());
             }
         }
-		return studentList;
+		return userList;
 	}
 	
 	public int addToDB(){
-		String sql = "INSERT INTO sw_students(type,username,email,password,fullname,gender,birthday,"
-				+ "phone,address,avatar,college,role,more,lastLogin,lastActivity,activation) "
-				+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO sw_users(type,username,email,password,fullname,"
+				+ "phone,address,avatar,lastLogin,lastActivity,activation) "
+				+ "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
 		int result = 0;
@@ -160,20 +149,15 @@ public class Student {
 			prepstmt.setString(3, this.email);
 			prepstmt.setString(4, this.password);
 			prepstmt.setString(5, this.fullname);
-			prepstmt.setString(6, this.gender);
-			prepstmt.setString(7, this.birthday);
-			prepstmt.setString(8, this.phone);
-			prepstmt.setString(9, this.address);
-			prepstmt.setString(10, this.avatar);
-			prepstmt.setString(11, this.college);
-			prepstmt.setString(12, this.role);
-			prepstmt.setString(13, this.more);
-			prepstmt.setInt(14, this.lastLogin);
-			prepstmt.setInt(15, this.lastActivity);
-			prepstmt.setString(16, this.activation);
+			prepstmt.setString(6, this.phone);
+			prepstmt.setString(7, this.address);
+			prepstmt.setString(8, this.avatar);
+			prepstmt.setInt(9, this.lastLogin);
+			prepstmt.setInt(10, this.lastActivity);
+			prepstmt.setString(11, this.activation);
 			
 			result = prepstmt.executeUpdate();
-			System.out.print("insertThanh cong");
+			System.out.print("insert Thanh cong");
 		}catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -191,33 +175,8 @@ public class Student {
         }
         return result;
 	}
-	public static int delete(int id){
-		String sql = "DELETE FROM sw_students WHERE id = ?;";
-		Connection connection = null;
-		PreparedStatement prepstmt = null;
-		int result = 0;
-		try{
-			connection = MyConnection.getConnection();
-			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setInt(1, id);
-			result = prepstmt.executeUpdate();
-			System.out.print("Deldete Thanh cong");
-		}catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            // finally block used to close resources
-            try {
-                if (prepstmt != null) {
-                	prepstmt.close();
-                }
-                if (connection != null) {	
-                    connection.close();
-                }
-            } catch (Exception e) {
-                System.out.println(e.toString());
-            }
-        }
-        return result;
+	public static int update(User user){
+		return 0;
 	}
 	public int getId() {
 		return id;
@@ -255,18 +214,6 @@ public class Student {
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
 	}
-	public String getGender() {
-		return gender;
-	}
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-	public String getBirthday() {
-		return birthday;
-	}
-	public void setBirthday(String birthday) {
-		this.birthday = birthday;
-	}
 	public String getPhone() {
 		return phone;
 	}
@@ -284,24 +231,6 @@ public class Student {
 	}
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
-	}
-	public String getCollege() {
-		return college;
-	}
-	public void setCollege(String college) {
-		this.college = college;
-	}
-	public String getRole() {
-		return role;
-	}
-	public void setRole(String role) {
-		this.role = role;
-	}
-	public String getMore() {
-		return more;
-	}
-	public void setMore(String more) {
-		this.more = more;
 	}
 	public int getLastLogin() {
 		return lastLogin;
@@ -321,4 +250,8 @@ public class Student {
 	public void setActivation(String activation) {
 		this.activation = activation;
 	}
+	public static void main(String[] a){
+		
+	}
 }
+

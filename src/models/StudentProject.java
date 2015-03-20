@@ -32,20 +32,27 @@ public class StudentProject {
 		this.more = more;
 	}
 	public static ArrayList<StudentProject> getStudentExps(String columnName,String value){
+		ArrayList<StudentProject> projectList = new ArrayList<StudentProject>();
+		String sql = "SELECT * FROM sw_student_projects WHERE "+ columnName +"=?;";
+		String sqlToGetAll = "SELECT * FROM sw_student_projects;";
 		//if columnName is not a column name, finish and return null
 		if(!STUDENT_PROJECT_COLUMN.contains(columnName)){
-			//Ghi log
-			System.out.println("Table has no the column called "+columnName);
-			return null;
+			if (columnName == "" && value == "") {
+				sql = sqlToGetAll;
+			}else{
+				//Ghi log
+				System.out.println("Table has no the column called "+columnName);
+				return projectList;
+			}
 		}
-		String sql = "SELECT * FROM sw_student_projects WHERE "+ columnName +"=?;";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
-		ArrayList<StudentProject> projectList = new ArrayList<StudentProject>();
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setString(1, value);
+			if (sql!=sqlToGetAll) {
+				prepstmt.setString(1, value);
+			}
 			ResultSet result = prepstmt.executeQuery();
 			while (result.next()) {
 				int id = result.getInt("id");
@@ -74,21 +81,48 @@ public class StudentProject {
         return projectList;
 	}
 	public int addToDB(){
-		String sql = "INSERT INTO sw_student_projects(id, studentId, project, link, more) "
-				+ "VALUES(?,?,?,?,?)";
+		String sql = "INSERT INTO sw_student_projects(studentId, project, link, more) "
+				+ "VALUES(?,?,?,?)";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
 		int result = 0;
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setInt(1, this.id);
-			prepstmt.setInt(2, this.studentId);
-			prepstmt.setString(3, this.project);
-			prepstmt.setString(4, this.link);
-			prepstmt.setString(5, this.more);
+			prepstmt.setInt(1, this.studentId);
+			prepstmt.setString(2, this.project);
+			prepstmt.setString(3, this.link);
+			prepstmt.setString(4, this.more);
 			result = prepstmt.executeUpdate();
 			System.out.print("Inserted into sw_student_volunteers successfully!");
+		}catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // finally block used to close resources
+            try {
+                if (prepstmt != null) {
+                	prepstmt.close();
+                }
+                if (connection != null) {	
+                    connection.close();
+                }
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        }
+        return result;
+	}
+	public static int delete(int id){
+		String sql = "DELETE FROM sw_student_projects WHERE id = ?;";
+		Connection connection = null;
+		PreparedStatement prepstmt = null;
+		int result = 0;
+		try{
+			connection = MyConnection.getConnection();
+			prepstmt = connection.prepareStatement(sql);
+			prepstmt.setInt(1, id);
+			result = prepstmt.executeUpdate();
+			System.out.println("Deldete Projects thanh cong!");
 		}catch (Exception e) {
             e.printStackTrace();
         } finally {

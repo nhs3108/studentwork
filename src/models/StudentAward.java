@@ -32,20 +32,29 @@ public class StudentAward {
 		this.more = more;
 	}
 	public static ArrayList<StudentAward> getStudentExps(String columnName,String value){
+		String sql = "SELECT * FROM sw_student_awards WHERE "+ columnName +"=?;";
+		String sqlToGetAll = "SELECT * FROM sw_student_awards;";
+		ArrayList<StudentAward> awardList = new ArrayList<StudentAward>();
 		//if columnName is not a column name, finish and return null
 		if(!STUDENT_AWARD_COLUMN.contains(columnName)){
-			//Ghi log
-			System.out.println("Table has no the column called "+columnName);
-			return null;
+			if (columnName == "" && value == "") {
+				sql = sqlToGetAll;
+			}else{
+				//Ghi log
+				System.out.println("Table has no the column called "+columnName);
+				return awardList;
+			}
 		}
-		String sql = "SELECT * FROM sw_student_awards WHERE "+ columnName +"=?;";
+		
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
-		ArrayList<StudentAward> awardList = new ArrayList<StudentAward>();
+		
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setString(1, value);
+			if (sql!=sqlToGetAll) {
+				prepstmt.setString(1, value);
+			}
 			ResultSet result = prepstmt.executeQuery();
 			while (result.next()) {
 				int id = result.getInt("id");
@@ -74,19 +83,18 @@ public class StudentAward {
         return awardList;
 	}
 	public int addToDB(){
-		String sql = "INSERT INTO sw_student_awards(id, studentId, award, year, more) "
-				+ "VALUES(?,?,?,?,?)";
+		String sql = "INSERT INTO sw_student_awards(studentId, award, year, more) "
+				+ "VALUES(?,?,?,?)";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
 		int result = 0;
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setInt(1, this.id);
-			prepstmt.setInt(2, this.studentId);
-			prepstmt.setString(3, this.award);
-			prepstmt.setInt(4, this.year);
-			prepstmt.setString(5, this.more);
+			prepstmt.setInt(1, this.studentId);
+			prepstmt.setString(2, this.award);
+			prepstmt.setInt(3, this.year);
+			prepstmt.setString(4, this.more);
 			result = prepstmt.executeUpdate();
 			System.out.print("Inserted into sw_student_awards successfully!");
 		}catch (Exception e) {
@@ -136,5 +144,9 @@ public class StudentAward {
 	public void setMore(String more) {
 		this.more = more;
 	}
-	
+	public static void main(String[] a){
+		StudentAward sa = new StudentAward(1, 2, "Huy chuong vang hoc sinh gioi", 1992, "chi co the la yeu");
+		sa.addToDB();
+		System.out.print(getStudentExps("", ""));
+	}
 }

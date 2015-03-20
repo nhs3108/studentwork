@@ -20,4 +20,7 @@ public class MD5 {
             throw new RuntimeException(e);
         }
     }
+    public static void main(String[] a) {
+    	System.out.print(encrypt("c4ca4238a0b923820dcc509a6f75849b"));
+	}
 }

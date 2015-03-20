@@ -22,13 +22,13 @@ public class Feedback {
         int n = 0;
         try {
             connection = MyConnection.getConnection();
-            String sql = "INSERT INTO feedbacks(user_id,content,time) VALUES(?,?,?)";
+            String sql = "INSERT INTO sw_feedbacks(userId,content,time) VALUES(?,?,?)";
             prepstmt =  connection.prepareStatement(sql);
             prepstmt.setInt(1, userId);
             prepstmt.setString(2, content);
             prepstmt.setString(3, time);
             n = prepstmt.executeUpdate();
-            System.out.println("Insert thanh cong");
+            System.out.println("Insert feedback thanh cong");
 
         } catch (Exception e) {
             System.out.println(e.toString());
@@ -101,5 +101,8 @@ public class Feedback {
 	public void setTime(String time) {
 		this.time = time;
 	}
-	
+	public static void main(String a[]){
+		Feedback fb =new Feedback(0, "Nguyên Hồng Sơn", "2015-03-15");
+		fb.pushNew();
+	}
 }

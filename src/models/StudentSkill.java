@@ -29,20 +29,27 @@ public class StudentSkill {
 		this.level = level;
 	}
 	public static ArrayList<StudentSkill> getStudentExps(String columnName,String value){
+		ArrayList<StudentSkill> skillList = new ArrayList<StudentSkill>();
+		String sql = "SELECT * FROM sw_student_skills WHERE "+ columnName +"=?;";
+		String sqlToGetAll = "SELECT * FROM sw_student_skills;";
 		//if columnName is not a column name, finish and return null
 		if(!STUDENT_SKILL_COLUMN.contains(columnName)){
-			//Ghi log
-			System.out.println("Table has no the column called "+columnName);
-			return null;
+			if (columnName == "" && value == "") {
+				sql = sqlToGetAll;
+			}else{
+				//Ghi log
+				System.out.println("Table has no the column called "+columnName);
+				return skillList;
+			}
 		}
-		String sql = "SELECT * FROM sw_student_skills WHERE "+ columnName +"=?;";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
-		ArrayList<StudentSkill> skillList = new ArrayList<StudentSkill>();
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setString(1, value);
+			if (sql!=sqlToGetAll) {
+				prepstmt.setString(1, value);
+			}
 			ResultSet result = prepstmt.executeQuery();
 			while (result.next()) {
 				int id = result.getInt("id");
@@ -69,18 +76,17 @@ public class StudentSkill {
         return skillList;
 	}
 	public int addToDB(){
-		String sql = "INSERT INTO sw_student_skills(id,studentId,skill,level) "
-				+ "VALUES(?,?,?,?)";
+		String sql = "INSERT INTO sw_student_skills(studentId,skill,level) "
+				+ "VALUES(?,?,?)";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
 		int result = 0;
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setInt(1, this.id);
-			prepstmt.setInt(2, this.studentId);
-			prepstmt.setString(3, this.skill);
-			prepstmt.setString(4, this.level);
+			prepstmt.setInt(1, this.studentId);
+			prepstmt.setString(2, this.skill);
+			prepstmt.setString(3, this.level);
 			result = prepstmt.executeUpdate();
 			System.out.print("Inserted into sw_student_skills successfully!");
 		}catch (Exception e) {

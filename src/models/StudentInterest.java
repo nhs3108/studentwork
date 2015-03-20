@@ -27,20 +27,27 @@ public class StudentInterest {
 	}
 
 	public static ArrayList<StudentInterest> getStudentExps(String columnName,String value){
+		ArrayList<StudentInterest> interestList = new ArrayList<StudentInterest>();
+		String sql = "SELECT * FROM sw_student_interests WHERE "+ columnName +"=?;";
+		String sqlToGetAll = "SELECT * FROM sw_student_interests;";
 		//if columnName is not a column name, finish and return null
 		if(!STUDENT_INTERESTS_COLUMN.contains(columnName)){
-			//Ghi log
-			System.out.println("Table has no the column called "+columnName);
-			return null;
+			if (columnName == "" && value == "") {
+				sql = sqlToGetAll;
+			}else{
+				//Ghi log
+				System.out.println("Table has no the column called "+columnName);
+				return interestList;
+			}
 		}
-		String sql = "SELECT * FROM sw_student_interests WHERE "+ columnName +"=?;";
 		Connection connection = null;
 		PreparedStatement prepstmt = null;
-		ArrayList<StudentInterest> interestList = new ArrayList<StudentInterest>();
 		try{
 			connection = MyConnection.getConnection();
 			prepstmt = connection.prepareStatement(sql);
-			prepstmt.setString(1, value);
+			if (sql!=sqlToGetAll) {
+				prepstmt.setString(1, value);
+			}
 			ResultSet result = prepstmt.executeQuery();
 			while (result.next()) {
 				int id = result.getInt("id");

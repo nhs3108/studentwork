@@ -18,11 +18,9 @@ public class LogoutServlet extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
-    }
-
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+    	response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         session.removeAttribute("user");
@@ -30,5 +28,9 @@ public class LogoutServlet extends HttpServlet {
         request.setAttribute("msgClass", "alert-success");
         request.setAttribute("message", "Đăng xuất thành công");
         dispatcher.forward(request, response);
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
     }
 }
