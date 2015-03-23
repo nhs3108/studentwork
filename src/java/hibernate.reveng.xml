@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="studentwork"/>
+  <table-filter match-name="student_skills"/>
+  <table-filter match-name="student_exp"/>
+  <table-filter match-name="student_awards"/>
+  <table-filter match-name="users"/>
+  <table-filter match-name="student_languages"/>
+  <table-filter match-name="student_interests"/>
+  <table-filter match-name="student_posts"/>
+  <table-filter match-name="student_certifications"/>
+  <table-filter match-name="student_projects"/>
+  <table-filter match-name="student_volunteers"/>
+  <table-filter match-name="feedbacks"/>
+  <table-filter match-name="student_basic"/>
+</hibernate-reverse-engineering>

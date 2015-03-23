@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 21, 2015 9:28:15 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entities.StudentBasic" table="student_basic" catalog="studentwork" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="studentId" type="int">
+            <column name="studentId" not-null="true" />
+        </property>
+        <property name="birthday" type="date">
+            <column name="birthday" length="10" />
+        </property>
+        <property name="gender" type="string">
+            <column name="gender" length="10" />
+        </property>
+        <property name="college" type="string">
+            <column name="college" />
+        </property>
+        <property name="inYear" type="java.lang.Integer">
+            <column name="inYear" />
+        </property>
+        <property name="major" type="string">
+            <column name="major" />
+        </property>
+        <property name="maritalStatus" type="string">
+            <column name="maritalStatus" length="20" />
+        </property>
+        <property name="nation" type="string">
+            <column name="nation" length="50" />
+        </property>
+        <property name="more" type="string">
+            <column name="more" length="65535" />
+        </property>
+    </class>
+</hibernate-mapping>
