@@ -29,7 +29,7 @@
 		</div>
 	</div>
 	
-	<jsp:include page="/WEB-INF/includes/loginForm.html"></jsp:include>
-	<jsp:include page="/WEB-INF/includes/signUpForm.html"></jsp:include>
+	<jsp:include page="/WEB-INF/includes/loginForm.jsp"></jsp:include>
+	<jsp:include page="/WEB-INF/includes/signUpForm.jsp"></jsp:include>
 </body>
 </html>

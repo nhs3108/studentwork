@@ -20,6 +20,10 @@
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript"
 	src="<%=request.getContextPath()%>/jsp/jquery.js"></script>
+	
+<script type="text/javascript"
+	src="<%=request.getContextPath()%>/jsp/seeMore.js"></script>
+	
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <title>${initParam['indexTitle']}</title>
@@ -68,8 +72,8 @@
 	</div>
 	<!-- *************START LOGIN FORM, SIGN UP FORM  -->
 	<!-- THEY WILL BE SHOW WHEN ITS LINK ON NAVIGATOR IS CLICKED -->
-	<jsp:include page="/WEB-INF/includes/loginForm.html"></jsp:include>
-	<jsp:include page="/WEB-INF/includes/signUpForm.html"></jsp:include>
+	<jsp:include page="/WEB-INF/includes/loginForm.jsp"></jsp:include>
+	<jsp:include page="/WEB-INF/includes/signUpForm.jsp"></jsp:include>
 	<!-- ***********END LOGIN AND SIGN UP FORM****************** -->
 	
 </body>
