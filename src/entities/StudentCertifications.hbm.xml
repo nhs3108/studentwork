@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 31-Mar-2015 00:53:38 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entities.StudentCertifications" table="student_certifications" catalog="studentwork" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="studentId" type="int">
+            <column name="studentId" not-null="true" />
+        </property>
+        <property name="certification" type="string">
+            <column name="certification" />
+        </property>
+        <property name="year" type="java.lang.Integer">
+            <column name="year" />
+        </property>
+    </class>
+</hibernate-mapping>

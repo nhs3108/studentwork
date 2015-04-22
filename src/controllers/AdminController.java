@@ -7,25 +7,19 @@ package controllers;
 
 import entities.Users;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import models.UserModel;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author HongSon
  */
-@WebServlet(name = "AboutServlet", urlPatterns = {"/AboutServlet"})
-public class AboutServlet extends HttpServlet {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+public class AdminController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,7 +32,19 @@ public class AboutServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet AdminController</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet AdminController at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -50,6 +56,12 @@ public class AboutServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
+
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -64,32 +76,27 @@ public class AboutServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        String username = request.getParameter("username");
-        if (username == null || username == "") {
-            Users user = (Users) request.getSession().getAttribute("user");
-            if (user != null) {
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/about.jsp");
-                request.setAttribute("user", user);
-                dispatcher.forward(request, response);
-            } else {
-                response.sendRedirect("home");
-                return;
-            }
+        HttpSession session = request.getSession();
+        Users user = (Users)session.getAttribute("user");
+        System.err.println(user.getType());
+        if (user != null && user.getType().equals("admin")) {
+            //request.setAttribute("message", message);
+            //request.setAttribute("msgClass", "alert-success");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin.jsp");
+            dispatcher.forward(request, response);
         } else {
-            if (!(new UserModel().getByUsername(username).isEmpty())) {
-                Users user = new UserModel().getByUsername(username).get(0);
-                request.setAttribute("user", user);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/about.jsp");
-                dispatcher.forward(request, response);
-            } else {
-                response.sendRedirect("home");
-                return;
-            }
+            response.sendRedirect("index.jsp");
         }
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
 }

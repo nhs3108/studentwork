@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 10, 2015 2:29:08 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entities.Relationships" table="relationships" catalog="studentwork" optimistic-lock="version">
+        <id name="relationshipId" type="java.lang.Integer">
+            <column name="relationshipId" />
+            <generator class="identity" />
+        </id>
+        <property name="user1Id" type="int">
+            <column name="user1Id" not-null="true" />
+        </property>
+        <property name="user2Id" type="int">
+            <column name="user2Id" not-null="true" />
+        </property>
+        <property name="status" type="int">
+            <column name="status" />
+        </property>
+    </class>
+</hibernate-mapping>

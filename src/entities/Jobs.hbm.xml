@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 18, 2015 10:25:59 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entities.Jobs" table="jobs" catalog="studentwork" optimistic-lock="version">
+        <id name="jobId" type="java.lang.Integer">
+            <column name="jobId" />
+            <generator class="identity" />
+        </id>
+        <property name="jobTitle" type="string">
+            <column name="jobTitle" not-null="true" />
+        </property>
+        <property name="conpanyId" type="int">
+            <column name="conpanyId" not-null="true" />
+        </property>
+        <property name="requirement" type="string">
+            <column name="requirement" length="65535" />
+        </property>
+        <property name="quantity" type="string">
+            <column name="quantity" />
+        </property>
+        <property name="salary" type="string">
+            <column name="salary" />
+        </property>
+        <property name="deadline" type="timestamp">
+            <column name="deadline" length="19" />
+        </property>
+        <property name="more" type="string">
+            <column name="more" length="65535" />
+        </property>
+    </class>
+</hibernate-mapping>

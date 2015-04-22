@@ -1,5 +1,7 @@
 package controllers;
 
+import entities.Feedbacks;
+import entities.Users;
 import models.*;
 
 import java.io.IOException;
@@ -17,15 +19,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.core.ApplicationContext;
-
 /**
  * Servlet implementation class PostFeedbackServlet
  */
 @WebServlet("/postFeedback")
 public class PostFeedbackServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -34,44 +35,36 @@ public class PostFeedbackServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect("contactus");
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     * response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.sendRedirect("contactus");
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		int userId = 1;
-		int minLenght = Integer.parseInt(this.getServletContext().getInitParameter("minLenghtFeedback"));
-		String content = request.getParameter("content") ;
-		if(content.length()<minLenght){
-			request.setAttribute("message", "Bài viết quá ngắn! Vui lòng thử lại với tối tiểu "+minLenght);
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     * response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        HttpSession session = request.getSession();
+        Users user = (Users)session.getAttribute("user");
+        int minLenght = Integer.parseInt(this.getServletContext().getInitParameter("minLenghtFeedback"));
+        String content = request.getParameter("content");
+        if (content.length() < minLenght) {
+            request.setAttribute("message", "Bài viết quá ngắn! Vui lòng thử lại với tối tiểu " + minLenght);
             request.setAttribute("msgClass", "alert-danger");
-		}else{
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			Date date = new Date();
-			String time = dateFormat.format(date);
-			Feedback feedback = new Feedback(userId, content, time);
-			int result = feedback.pushNew();
-			if(result!=0){
-				request.setAttribute("message", "Đã gửi! Cảm ơn ý kiến đóng góp của bạn!");
-	            request.setAttribute("msgClass", "alert-success");
-			}else{
-				request.setAttribute("message", "Đã xảy ra lỗi! Vui lòng thử lại sau");
-	            request.setAttribute("msgClass", "alert-danger");
-			}
-			
-		}
-		RequestDispatcher dispatcher = request.getRequestDispatcher("contactus");
-		dispatcher.forward(request, response);
-	}
+        } else {
+            FeedbackModel fm = new FeedbackModel();
+            fm.add(new Feedbacks(user.getId(), content, new Date()));
+        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher("contactus");
+        dispatcher.forward(request, response);
+    }
 
 }

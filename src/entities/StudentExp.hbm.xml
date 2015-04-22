@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 31-Mar-2015 00:53:38 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entities.StudentExp" table="student_exp" catalog="studentwork" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="studentId" type="int">
+            <column name="studentId" not-null="true" />
+        </property>
+        <property name="company" type="string">
+            <column name="company" length="100" />
+        </property>
+        <property name="title" type="string">
+            <column name="title" />
+        </property>
+        <property name="startTime" type="date">
+            <column name="startTime" length="10" />
+        </property>
+        <property name="finishTime" type="date">
+            <column name="finishTime" length="10" />
+        </property>
+        <property name="more" type="string">
+            <column name="more" length="65535" />
+        </property>
+    </class>
+</hibernate-mapping>
